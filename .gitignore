@@ -1,3 +1,4 @@
 node_modules
 .envpublic/components
 public/components/
+.env
