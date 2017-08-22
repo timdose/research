@@ -1,6 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
   padding: 50px;
-  font: 16px Helvetica, Arial, sans-serif;
+  font: 18px Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -9,4 +13,81 @@ a {
 
 .field-group {
     margin-bottom: 40px;
+    border-top: 1px solid #aaa;
+    padding-top: 30px;
+}
+
+.note {
+    font-size: 16px;
+    // font-weight: bold;
+    border-left: 3px solid #6a6;
+    padding: 10px 15px;
+}
+
+.note .text {
+    color: #6A6;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.question-image {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.likert-group {
+    width: 400px;
+}
+
+.likert-item {
+    width: 20%;
+    padding: 10px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+label.likert-item {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.likert-labels {
+    font-size: 14px;
+    // font-weight: bold;
+    width: 100%;
+}
+
+.likert-label {
+    width: 50%;
+    display: inline-block;
+}
+
+.likert-label.high {
+    text-align: right;
+}
+
+input[type="submit"] {
+    font-size: 18px;
+    padding: 10px 20px;
+    background: #2255FF;
+    border: none;
+    color: #fff;
+}
+
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
 }

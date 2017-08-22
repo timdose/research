@@ -6,14 +6,38 @@ block content
 
   form(method="POST",action="/save-details")
     .field-group
-      label Turk ID
+      label Mechanical Turk ID
       <input type="text" id="worker-id" name="worker-id"></input>
 
     .field-group
-      <img id="preview" statusrc="/images/default.png">
+      <img class="question-image" src="/images/default.png">
       label How would you pronounce this name?
-      p Please record yourself and upload an audio file. Only .wma, .m4a, .mp3, and .wav files will be accepted.
-      <input type="file" id="file-input">
+      .note
+        .text Please record yourself and upload an audio file. Only .wma, .m4a, .mp3, and .wav files will be accepted.
+        <input type="file" id="file-input">
+
+    .field-group
+      label How confident are you that you pronounced the name above correctly?
+      .likert-group
+        .likert-items
+          label.likert-item
+            .text 1
+            <input type="radio" name="confidence" value="1">
+          label.likert-item
+            .text 2
+            <input type="radio" name="confidence" value="2">
+          label.likert-item
+            .text 3
+            <input type="radio" name="confidence" value="3">
+          label.likert-item
+            .text 4
+            <input type="radio" name="confidence" value="4">
+          label.likert-item
+            .text 5
+            <input type="radio" name="confidence" value="5">
+        .likert-labels
+            .likert-label.low Not confident at all
+            .likert-label.high Very confident
 
     .field-group
       <input type="submit" value="Submit">
