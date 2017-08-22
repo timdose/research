@@ -1,19 +1,22 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Pronunciation Survey
 
-  <input type="file" id="file-input">
-  <p id="status">Please select a file</p>
-  <img id="preview" src="/images/default.png">
 
-  <form method="POST" action="/save-details">
-    <input type="hidden" id="avatar-url" name="avatar-url" value="/images/default.png">
-    <input type="text" name="username" placeholder="Username"><br>
-    <input type="text" name="full-name" placeholder="Full name"><br><br>
-    <input type="submit" value="Update profile">
-  </form>
+  form(method="POST",action="/save-details")
+    .field-group
+      label Turk ID
+      <input type="text" id="worker-id" name="worker-id"></input>
+
+    .field-group
+      <img id="preview" statusrc="/images/default.png">
+      label How would you pronounce this name?
+      p Please record yourself and upload an audio file. Only .wma, .m4a, .mp3, and .wav files will be accepted.
+      <input type="file" id="file-input">
+
+    .field-group
+      <input type="submit" value="Submit">
 
   script.
     (() => {
