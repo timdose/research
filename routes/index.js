@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const util = require('util');
 
 var aws = require('aws-sdk');
 
@@ -37,6 +38,12 @@ router.get('/sign-s3', function(req, res){
         res.write(JSON.stringify(returnData));
         res.end();
       });
+});
+
+router.post('/save', function(req, res) {
+  console.log('\n\n*********************************\n')
+  console.log(util.inspect(req.body, false, null));
+  res.render('confirm', {workerID: '12345'});
 });
 
 module.exports = router;

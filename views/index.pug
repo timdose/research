@@ -4,7 +4,7 @@ block content
   h1 Pronunciation Survey
 
 
-  form(method="POST",action="/save-details")
+  form(method="POST",action="/save")
     .field-group
       label Mechanical Turk ID
       <input type="text" id="worker-id" name="worker-id"></input>
@@ -13,12 +13,15 @@ block content
       <img class="question-image" src="/images/default.png">
       label How would you pronounce this name?
       .note
-        .text Please record yourself and upload an audio file. Only .wma, .m4a, .mp3, and .wav files will be accepted.
-        <input type="file" id="file-input">
+        .text Please record yourself and upload an audio file. <br>Only .wma, .m4a, .mp3, and .wav files will be accepted.
+        <input type="file" id="audio-file" name="audio-file">
 
     .field-group
       label How confident are you that you pronounced the name above correctly?
       .likert-group
+        .likert-labels
+            .likert-label.low Not confident at all
+            .likert-label.high Very confident
         .likert-items
           label.likert-item
             .text 1
@@ -35,22 +38,20 @@ block content
           label.likert-item
             .text 5
             <input type="radio" name="confidence" value="5">
-        .likert-labels
-            .likert-label.low Not confident at all
-            .likert-label.high Very confident
 
     .field-group
+      <input type="hidden" name="survey-id" value="001"></input>
       <input type="submit" value="Submit">
 
   script.
     (() => {
       document.getElementById("file-input").onchange = () => {
-        const files = document.getElementById('file-input').files;
-        const file = files[0];
-        if(file == null){
-          return alert('No file selected.');
-        }
-        getSignedRequest(file);
+        //- const files = document.getElementById('file-input').files;
+        //- const file = files[0];
+        //- if(file == null){
+        //-   return alert('No file selected.');
+        //- }
+        //- getSignedRequest(file);
       };
 
       function getSignedRequest(file){
