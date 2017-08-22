@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const util = require('util');
+const multer = require('multer');
+const upload = multer({ dest: 'tmp/' })
 
 var aws = require('aws-sdk');
 
@@ -40,10 +42,13 @@ router.get('/sign-s3', function(req, res){
       });
 });
 
-router.post('/save', function(req, res) {
+router.post('/save', upload.single('audioFile'), function(req, res) {
   console.log('\n\n*********************************\n')
   console.log(util.inspect(req.body, false, null));
-  res.render('confirm', {workerID: '12345'});
+
+  console.log('\n\n*********************************\n')
+  console.log(util.inspect(req.file, false, null));
+  res.render('confirm', {fields: req.body, file: req.file });
 });
 
 module.exports = router;

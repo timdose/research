@@ -3,5 +3,12 @@ extends layout
 block content
   h1 Survey complete!
 
-  p Saved for Mechanical Turk ID {workerID}
+
+  .confirm-item 
+    .field Mechanical Turk ID 
+    .value #{fields.workerID}
+
+  .confirm-item 
+    .field Audio file name
+    .value #{file.originalname}
 

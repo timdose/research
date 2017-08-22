@@ -4,17 +4,17 @@ block content
   h1 Pronunciation Survey
 
 
-  form(method="POST",action="/save")
+  form(method="POST",action="/save", enctype="multipart/form-data")
     .field-group
       label Mechanical Turk ID
-      <input type="text" id="worker-id" name="worker-id"></input>
+      <input type="text" id="worker-id" name="workerID"></input>
 
     .field-group
       <img class="question-image" src="/images/default.png">
       label How would you pronounce this name?
       .note
         .text Please record yourself and upload an audio file. <br>Only .wma, .m4a, .mp3, and .wav files will be accepted.
-        <input type="file" id="audio-file" name="audio-file">
+        <input type="file" id="audio-file" name="audioFile">
 
     .field-group
       label How confident are you that you pronounced the name above correctly?
@@ -40,7 +40,7 @@ block content
             <input type="radio" name="confidence" value="5">
 
     .field-group
-      <input type="hidden" name="survey-id" value="001"></input>
+      <input type="hidden" name="surveyID" value="001"></input>
       <input type="submit" value="Submit">
 
   script.
