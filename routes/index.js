@@ -45,7 +45,7 @@ var aws = require('aws-sdk');
 aws.config.region = 'us-east-1';
 const S3_BUCKET = 'timdose-research';
 // const S3_BUCKET = process.env.S3_BUCKET;
-const amazonS3 = new aws.S3();
+const s3 = new aws.S3();
 
 
 //---------------------------------------------
@@ -89,7 +89,7 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
 
   if (isComplete) {
     handleAudioFileUpload(req.body, req.file);
-    // handleTextFileUpload(req.body, req.file);
+    handleTextFileUpload(req.body, req.file);
     res.redirect('/thank-you');
   } else {
     res.render('index', {fields: req.body, validation: validation});    
@@ -97,22 +97,41 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
 });
 
 function handleAudioFileUpload(fields, file) {
+  const keyName = fields.workerID + path.extname(file.originalname);
   var params = {
     Bucket: S3_BUCKET,
-    Key: fields.workerID + path.extname(file.originalname),
+    Key: keyName,
     Body: fs.createReadStream(file.path)
   };
 
-  amazonS3.putObject(params, function (perr, pres) {
-    if (perr) {
-      console.log("Error uploading data: ", perr);
+  s3.putObject(params, function (err, res) {
+    if (err) {
+      console.log("Error uploading data: ", err);
     } else {
-      console.log("Successfully uploaded data to myBucket/myKey");
+      console.log("Successfully uploaded data to " + S3_BUCKET + "/" + keyName);
     }
   });
 
 }
 
+
+function handleTextFileUpload(fields, file) {
+  var keyName = fields.workerID + '.txt';
+  var body = JSON.stringify(fields);
+
+  var params = {
+    Bucket: S3_BUCKET, 
+    Key: keyName, 
+    Body: body
+  };
+
+  s3.putObject(params, function(err, data) {
+    if (err)
+      console.log("Error uploading data: ", err);
+    else
+      console.log("Successfully uploaded data to " + S3_BUCKET + "/" + keyName);
+  });
+}
 
 router.get('/sign-s3', function(req, res, next){
     console.log('*********BUCKET: ' + process.env.S3_BUCKET)
