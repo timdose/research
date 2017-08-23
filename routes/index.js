@@ -15,9 +15,6 @@ const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 const storage = multer.diskStorage({
   filename: function(req, file, callback ) {
     callback(null, file.originalname)
-  },
-  destination: function(req, file, callback ) {
-    callback(null, 'tmp');
   }
 })
 
@@ -96,14 +93,15 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
   }
 
   if (isComplete) {
-    handleUpload(req.body, req.file);
+    handleAudioFileUpload(req.body, req.file);
+    // handleTextFileUpload(req.body, req.file);
     res.redirect('/thank-you');
   } else {
     res.render('index', {fields: req.body, validation: validation});    
   }
 });
 
-function handleUpload(fields, file) {
+function handleAudioFileUpload(fields, file) {
   var params = {
     Bucket: S3_BUCKET,
     Key: fields.workerID + path.extname(file.originalname),
