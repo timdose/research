@@ -17,6 +17,13 @@ a {
     padding-top: 30px;
 }
 
+.field-group .error {
+    font-size: 14px;
+    color: #F44;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 .note {
     font-size: 16px;
     // font-weight: bold;
@@ -122,3 +129,4 @@ input[type="text"] {
     width: 50%;
     background: #efe;
 }
+

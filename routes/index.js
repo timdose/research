@@ -37,7 +37,7 @@ const S3_BUCKET = 'timdose-research';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('index', {fields:{}, validation:{} });
 });
 
 router.post('/', upload.single('audioFile'), function(req, res, next) {
@@ -46,14 +46,36 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
   console.log('\n\n*********************************\n')
   console.log(util.inspect(req.file, false, null));
 
-  var isComplete = false;
-  if (req.body.workerID) {
-    res.render('confirm', {fields: req.body, file: req.file });
+  var validation = {}
+  var isComplete = true;
+
+  if (req.body.workerID == '' ) {
+    validation.workerID = 'WORKER_ID_EMPTY';
+    isComplete = false;
+  }
+
+  if (req.body.confidence == '' || req.body.confidence === undefined ) {
+    validation.confidence = 'CONFIDENCE_EMPTY';
+    isComplete = false;
+  }
+
+  if (req.file === undefined ) {
+    validation.audioFile = 'FILE_EMPTY';
+    isComplete = false;
+  }
+
+  if (isComplete) {
+    handleUpload(req.body, req.file);
+    res.redirect('/thank-you');
   } else {
-    res.render('index');    
+    res.render('index', {fields: req.body, validation: validation});    
   }
 });
 
+
+function handleUpload() {
+
+}
 
 router.get('/sign-s3', function(req, res, next){
     console.log('*********BUCKET: ' + process.env.S3_BUCKET)
@@ -82,6 +104,9 @@ router.get('/sign-s3', function(req, res, next){
       });
 });
 
+router.get('/thank-you', function(req, res, next) {
+  res.render('confirm');
+});
 
 
 module.exports = router;
