@@ -46,15 +46,17 @@ label {
 }
 
 .likert-item {
-    width: 20%;
+    width: 19%;
     padding: 10px;
     display: inline-block;
     border: 1px solid #ccc;
+    margin-right: 1%;
     text-align: center;
 }
 
 label.likert-item {
     font-size: 16px;
+    background: #eee;
     font-weight: normal;
 }
 
@@ -108,4 +110,15 @@ input[type="text"] {
 
 .confirm-item .value {
     font-weight: bold;
+}
+
+.confirm-item .detail {
+    font-size: 14px;
+}
+
+.confirm-item.callout {
+    border: 1px solid #6A6;
+    padding: 20px;
+    width: 50%;
+    background: #efe;
 }

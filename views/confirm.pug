@@ -9,6 +9,16 @@ block content
     .value #{fields.workerID}
 
   .confirm-item 
-    .field Audio file name
+    .field Audio file
     .value #{file.originalname}
+    .detail #{file.size} bytes
+
+  .confirm-item 
+    .field Confidence
+    .value #{fields.confidence}
+    
+  .callout.confirm-item
+    .field Survey complete code
+    .value MCS101
+  
 

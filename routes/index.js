@@ -2,7 +2,32 @@ var express = require('express');
 var router = express.Router();
 const util = require('util');
 const multer = require('multer');
-const upload = multer({ dest: 'tmp/' })
+const path = require('path');
+
+const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav', '.png']
+
+function test(blah) {
+  return blah + 20;
+}
+
+const upload = multer({ 
+  dest: 'tmp/',
+  fileFilter: function(req, file, callback) {
+    // console.log(callback.toString());
+    var extension = path.extname(file.originalname);
+    if ( ACCEPTED_EXTENSIONS.indexOf( extension ) < 0 ) {
+      req.uploadHasBadExtension = true;
+      return callback(null, false);
+    }
+
+    return callback(null, true);
+  },
+  onError: function(err, next) {
+    console.log(err);
+    console.log('err');
+    next();
+  }
+})
 
 var aws = require('aws-sdk');
 
@@ -12,10 +37,25 @@ const S3_BUCKET = 'timdose-research';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
-router.get('/sign-s3', function(req, res){
+router.post('/', upload.single('audioFile'), function(req, res, next) {
+  console.log('\n\n*********************************\n')
+  console.log(util.inspect(req.body, false, null));
+  console.log('\n\n*********************************\n')
+  console.log(util.inspect(req.file, false, null));
+
+  var isComplete = false;
+  if (req.body.workerID) {
+    res.render('confirm', {fields: req.body, file: req.file });
+  } else {
+    res.render('index');    
+  }
+});
+
+
+router.get('/sign-s3', function(req, res, next){
     console.log('*********BUCKET: ' + process.env.S3_BUCKET)
     const s3 = new aws.S3();
       const fileName = req.query['file-name'];
@@ -35,20 +75,13 @@ router.get('/sign-s3', function(req, res){
         }
         const returnData = {
           signedRequest: data,
-          url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+          url: 'https://${S3_BUCKET}.s3.amazonaws.com/${fileName}'
         };
         res.write(JSON.stringify(returnData));
         res.end();
       });
 });
 
-router.post('/save', upload.single('audioFile'), function(req, res) {
-  console.log('\n\n*********************************\n')
-  console.log(util.inspect(req.body, false, null));
 
-  console.log('\n\n*********************************\n')
-  console.log(util.inspect(req.file, false, null));
-  res.render('confirm', {fields: req.body, file: req.file });
-});
 
 module.exports = router;
