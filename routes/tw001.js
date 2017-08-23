@@ -8,6 +8,9 @@ const moment = require('moment');
 
 const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 
+const S3_BUCKET = 'timdose-research-tw001';
+const S3_FOLDER = '01';
+
 //---------------------------------------------
 // File upload setup
 //---------------------------------------------
@@ -44,7 +47,6 @@ const upload = multer({
 var aws = require('aws-sdk');
 
 aws.config.region = 'us-east-1';
-const S3_BUCKET = 'timdose-research';
 // const S3_BUCKET = process.env.S3_BUCKET;
 const s3 = new aws.S3();
 
@@ -99,7 +101,7 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
 });
 
 function handleAudioFileUpload(fields, file) {
-  const keyName = fields.workerID + path.extname(file.originalname);
+  const keyName = S3_FOLDER + '/' + fields.workerID + path.extname(file.originalname);
   var params = {
     Bucket: S3_BUCKET,
     Key: keyName,
@@ -118,7 +120,7 @@ function handleAudioFileUpload(fields, file) {
 
 
 function handleTextFileUpload(fields, file, ip) {
-  var keyName = fields.workerID + '.txt';
+  var keyName = S3_FOLDER + '/' + fields.workerID + '.txt';
 
   var results = {};
   for ( var attr in file ) {
