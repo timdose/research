@@ -4,6 +4,7 @@ const util = require('util');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const moment = require('moment');
 
 const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 
@@ -117,7 +118,18 @@ function handleAudioFileUpload(fields, file) {
 
 function handleTextFileUpload(fields, file) {
   var keyName = fields.workerID + '.txt';
-  var body = JSON.stringify(fields);
+
+  var results = {};
+  for ( var attr in file ) {
+    results[attr] = file[attr];
+  }
+  for ( var attr in fields ) {
+    results[attr] = fields[attr];
+  }
+  results.timestamp = moment().format('YYYY-MM-DD HH:mm:ss Z')
+  console.log('**FINAL DATA: ' + util.inspect(results));
+
+  var body = JSON.stringify(results);
 
   var params = {
     Bucket: S3_BUCKET, 
