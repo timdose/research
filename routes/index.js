@@ -4,7 +4,7 @@ const util = require('util');
 const multer = require('multer');
 const path = require('path');
 
-const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav', '.png']
+const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 
 function test(blah) {
   return blah + 20;
