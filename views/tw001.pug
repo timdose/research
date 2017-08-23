@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1 Pronunciation Survey
+
+
+  form(method="POST",action="/tw001/", enctype="multipart/form-data")
+    .field-group
+      label Mechanical Turk ID
+
+      <input type="text" id="worker-id" name="workerID" value="#{fields.workerID}"></input>
+        
+      if (validation.workerID)
+        if ( validation.workerID == 'WORKER_ID_EMPTY')
+          .error Please enter your ID
+
+    .field-group
+      <img class="question-image" src="/images/default.png">
+      label How would you pronounce this name?
+      .note
+        .text Please record yourself and upload an audio file. <br>Only .wma, .m4a, .mp3, and .wav files will be accepted.
+        <input type="file" id="audio-file" name="audioFile">
+
+      if (validation.audioFile)
+        if ( validation.audioFile == 'FILE_EMPTY')
+          .error Please upload a file
+        if ( validation.audioFile == 'FILE_WRONG_TYPE')
+          .error Please upload a .wma, .m4a, .mp3, or .wav file.
+
+    .field-group
+      label How confident are you that you pronounced the name above correctly?
+      .likert-group
+        .likert-labels
+            .likert-label.low Not confident at all
+            .likert-label.high Very confident
+        .likert-items
+          label.likert-item
+            .text 1
+            input(type='radio', name='confidence', value='1', checked=fields.confidence==1)
+          label.likert-item
+            .text 2
+            input(type='radio', name='confidence', value='2', checked=fields.confidence==2)
+          label.likert-item
+            .text 3
+            input(type='radio', name='confidence', value='3', checked=fields.confidence==3)
+          label.likert-item
+            .text 4
+            input(type='radio', name='confidence', value='4', checked=fields.confidence==4)
+          label.likert-item
+            .text 5
+            input(type='radio', name='confidence', value='5', checked=fields.confidence==5)
+      if (validation.confidence)
+        if ( validation.confidence == 'CONFIDENCE_EMPTY')
+          .error Please select a value.
+
+    .field-group
+      <input type="hidden" name="surveyID" value="001"></input>
+      <input type="submit" value="Submit">
+
+
