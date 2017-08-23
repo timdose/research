@@ -3,15 +3,26 @@ var router = express.Router();
 const util = require('util');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const s3 = require('s3');
 
 const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 
-function test(blah) {
-  return blah + 20;
-}
+//---------------------------------------------
+// File upload setup
+//---------------------------------------------
+
+const storage = multer.diskStorage({
+  filename: function(req, file, callback ) {
+    callback(null, file.originalname)
+  },
+  destination: function(req, file, callback ) {
+    callback(null, 'tmp');
+  }
+})
 
 const upload = multer({ 
-  dest: 'tmp/',
+  storage: storage,
   fileFilter: function(req, file, callback) {
     // console.log(callback.toString());
     var extension = path.extname(file.originalname);
@@ -29,11 +40,26 @@ const upload = multer({
   }
 })
 
+//---------------------------------------------
+// AWS setup
+//---------------------------------------------
+
 var aws = require('aws-sdk');
 
 aws.config.region = 'us-east-1';
 const S3_BUCKET = 'timdose-research';
 // const S3_BUCKET = process.env.S3_BUCKET;
+const amazonS3 = new aws.S3();
+const clientOptions = {
+  s3Client: amazonS3
+}
+const client = s3.createClient(clientOptions);
+
+
+//---------------------------------------------
+// Routes
+//---------------------------------------------
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -77,10 +103,43 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
   }
 });
 
+function handleUpload(fields, file) {
+  var params = {
+    Bucket: S3_BUCKET,
+    Key: fields.workerID + path.extname(file.originalname),
+    Body: fs.createReadStream(file.path)
+  };
 
-function handleUpload() {
+  amazonS3.putObject(params, function (perr, pres) {
+    if (perr) {
+      console.log("Error uploading data: ", perr);
+    } else {
+      console.log("Successfully uploaded data to myBucket/myKey");
+    }
+  });
 
 }
+
+// function handleUpload(fields, file) {
+//   const params = {
+//     localfile: file.path,
+//     s3Params: {
+//       Bucket: S3_BUCKET,
+//       Key: fields.workerID + path.extname(file.originalname),
+//       ContentType: file.mimetype
+//     }
+//   }
+
+//   console.log(params);
+
+//   const uploader = client.uploadFile(params)
+//   uploader.on('error', function(err) {
+//     console.error("unable to upload:", err.stack);
+//   });
+//   uploader.on('end', function() {
+//     console.log("done uploading");
+//   }); 
+// }
 
 router.get('/sign-s3', function(req, res, next){
     console.log('*********BUCKET: ' + process.env.S3_BUCKET)
