@@ -64,6 +64,11 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
     isComplete = false;
   }
 
+  if (req.uploadHasBadExtension === true ) {
+    validation.audioFile = "FILE_WRONG_TYPE";
+    isComplete = false;
+  }
+
   if (isComplete) {
     handleUpload(req.body, req.file);
     res.redirect('/thank-you');

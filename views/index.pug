@@ -24,6 +24,8 @@ block content
       if (validation.audioFile)
         if ( validation.audioFile == 'FILE_EMPTY')
           .error Please upload a file
+        if ( validation.audioFile == 'FILE_WRONG_TYPE')
+          .error Please upload a .wma, .m4a, .mp3, or .wav file.
 
     .field-group
       label How confident are you that you pronounced the name above correctly?
@@ -34,19 +36,19 @@ block content
         .likert-items
           label.likert-item
             .text 1
-            <input type="radio" name="confidence" value="1">
+            input(type='radio', name='confidence', value='1', checked=fields.confidence==1)
           label.likert-item
             .text 2
-            <input type="radio" name="confidence" value="2">
+            input(type='radio', name='confidence', value='2', checked=fields.confidence==2)
           label.likert-item
             .text 3
-            <input type="radio" name="confidence" value="3">
+            input(type='radio', name='confidence', value='3', checked=fields.confidence==3)
           label.likert-item
             .text 4
-            <input type="radio" name="confidence" value="4">
+            input(type='radio', name='confidence', value='4', checked=fields.confidence==4)
           label.likert-item
             .text 5
-            <input type="radio" name="confidence" value="5">
+            input(type='radio', name='confidence', value='5', checked=fields.confidence==5)
       if (validation.confidence)
         if ( validation.confidence == 'CONFIDENCE_EMPTY')
           .error Please select a value.
