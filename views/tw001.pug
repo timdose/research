@@ -3,8 +3,7 @@ extends layout
 block content
   h1 Pronunciation Survey
 
-
-  form(method="POST",action="/tw001/", enctype="multipart/form-data")
+  <form method="POST" action="/tw/#{surveyID}" enctype="multipart/form-data">
     .field-group
       label Mechanical Turk ID
 
@@ -15,7 +14,7 @@ block content
           .error Please enter your ID
 
     .field-group
-      <img class="question-image" src="/images/default.png">
+      <img class="question-image" src="/images/#{imageVariation}.jpg">
       label How would you pronounce this name?
       .note
         .text Please record yourself and upload an audio file. <br>Only .wma, .m4a, .mp3, and .wav files will be accepted.
@@ -54,7 +53,8 @@ block content
           .error Please select a value.
 
     .field-group
-      <input type="hidden" name="surveyID" value="tw001.01"></input>
+      <input type="hidden" name="surveyID" value="#{surveyID}"></input>
+      <input type="hidden" name="imageVariation" value="#{imageVariation}"></input>
       <input type="submit" value="Submit">
 
 

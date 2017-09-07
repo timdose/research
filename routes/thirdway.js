@@ -1,15 +1,28 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const util = require('util');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
+const aws = require('aws-sdk');
 
 const ACCEPTED_EXTENSIONS = ['.wma', '.m4a', '.mp3', '.wav']
 
 const S3_BUCKET = 'timdose-research-tw001';
-const S3_FOLDER = '01';
+
+var s3Folder = moment().format('YYYY-MM-DD');
+
+const VARIATION_DATA = {
+  a: {
+    surveyID: 'tw001-a',
+    imageVariation: 'madecasse'
+  },
+  b: {
+    surveyID: 'tw001-b',
+    imageVariation: 'madecas'
+  }
+}
 
 //---------------------------------------------
 // File upload setup
@@ -44,10 +57,7 @@ const upload = multer({
 // AWS setup
 //---------------------------------------------
 
-var aws = require('aws-sdk');
-
 aws.config.region = 'us-east-1';
-// const S3_BUCKET = process.env.S3_BUCKET;
 const s3 = new aws.S3();
 
 
@@ -57,11 +67,28 @@ const s3 = new aws.S3();
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('tw001', {fields:{}, validation:{} });
-});
+// router.get('/', function(req, res, next) {
+//   res.render('tw001', {fields:{}, validation:{}, surveyID: 'tw001.01A', imageVariation: 'madecasse' });
+// });
 
-router.post('/', upload.single('audioFile'), function(req, res, next) {
+router.get('/tw001-a', getHome );
+router.get('/tw001-b', getHome );
+router.post('/', upload.single('audioFile'), postHome );
+router.post('/tw001-a', upload.single('audioFile'), postHome );
+router.post('/tw001-b', upload.single('audioFile'), postHome );
+
+function getHome( req, res, next ) {
+  var variation = req.path.split('-')[1];
+  var variationData = VARIATION_DATA[variation];
+  res.render('tw001', {
+    fields:{}, 
+    validation:{}, 
+    surveyID: variationData.surveyID, 
+    imageVariation: variationData.imageVariation 
+  }); 
+}
+
+function postHome( req, res, next ) {
   console.log('\n\n*********************************\n')
   console.log(util.inspect(req.body, false, null));
   console.log('\n\n*********************************\n')
@@ -98,10 +125,11 @@ router.post('/', upload.single('audioFile'), function(req, res, next) {
   } else {
     res.render('tw001', {fields: req.body, validation: validation});    
   }
-});
+}
+
 
 function handleAudioFileUpload(fields, file) {
-  const keyName = S3_FOLDER + '/' + fields.workerID + path.extname(file.originalname);
+  const keyName = fields.surveyID + '/' + fields.workerID + path.extname(file.originalname);
   var params = {
     Bucket: S3_BUCKET,
     Key: keyName,
@@ -120,7 +148,7 @@ function handleAudioFileUpload(fields, file) {
 
 
 function handleTextFileUpload(fields, file, ip) {
-  var keyName = S3_FOLDER + '/' + fields.workerID + '.txt';
+  var keyName = fields.surveyID + '/' + fields.workerID + '.txt';
 
   var results = {};
   for ( var attr in fields ) {
