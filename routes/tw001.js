@@ -123,11 +123,11 @@ function handleTextFileUpload(fields, file, ip) {
   var keyName = S3_FOLDER + '/' + fields.workerID + '.txt';
 
   var results = {};
-  for ( var attr in file ) {
-    results[attr] = file[attr];
-  }
   for ( var attr in fields ) {
     results[attr] = fields[attr];
+  }
+  for ( var attr in file ) {
+    results[attr] = file[attr];
   }
   results.timestamp = moment().format('YYYY-MM-DD HH:mm:ss Z')
   results.ip = ip;
