@@ -129,7 +129,10 @@ function postHome( req, res, next ) {
 
 
 function handleAudioFileUpload(fields, file) {
-  const keyName = fields.surveyID + '/' + fields.workerID + path.extname(file.originalname);
+  var variationFolder = fields.surveyID;
+  var dateFolder = moment().format('YYYY-MM-DD');
+  var filename = fields.workerID + path.extname(file.originalname)
+  const keyName = [variationFolder, dateFolder, filename].join('/')
   var params = {
     Bucket: S3_BUCKET,
     Key: keyName,
@@ -148,7 +151,10 @@ function handleAudioFileUpload(fields, file) {
 
 
 function handleTextFileUpload(fields, file, ip) {
-  var keyName = fields.surveyID + '/' + fields.workerID + '.txt';
+  var variationFolder = fields.surveyID;
+  var dateFolder = moment().format('YYYY-MM-DD');
+  var filename = fields.workerID + '.txt';
+  const keyName = [variationFolder, dateFolder, filename].join('/')
 
   var results = {};
   for ( var attr in fields ) {
