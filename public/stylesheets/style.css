@@ -130,3 +130,6 @@ input[type="text"] {
     background: #efe;
 }
 
+.extra-strong {
+    font-weight: bold;
+}
